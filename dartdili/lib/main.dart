@@ -1,3 +1,4 @@
+import 'package:dartdili/screens/student_add.dart';
 import 'package:flutter/material.dart';
 import 'package:dartdili/models/student.dart';
 
@@ -14,17 +15,14 @@ class Myapp extends StatefulWidget {
 class _MyappState extends State<Myapp> {
   String mesaj_mrb = "Öğrenci Takip Sistemi";
 
-  String seciliOgrenci = "abc";
+  Student selectedStudent = Student.WithId(0,"","",0);
 
   // var students = new List <Student>(); --> hatali kullanim tipi
-   List<Student> students = [Student("kemal", "sakir", 25),Student("Kerem", "Varış",65),Student("Halil", "Duymaz", 45)];
+   List<Student> students = [
+     Student.WithId(1,"kemal", "sakir", 25),
+     Student.WithId(2,"Kerem", "Varış",65),
+     Student.WithId(3,"Halil", "Duymaz", 45)];
 
-  var ogrenciler = [
-    "kemal mufit",
-    " kerem Varış",
-    "Berkay Bilgin",
-    "Murat Kurboğan"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +34,11 @@ class _MyappState extends State<Myapp> {
     );
   }
 
-  String sinavHesapla(int puan) {
-    String mesaj = "";
-    if (puan >= 50) {
-      mesaj = "geçti";
-    } else if (puan >= 40) {
-      mesaj = "bütünlemeye kaldı";
-    } else {
-      mesaj = "kaldı";
-    }
-    return mesaj;
-  }
+
 
   void mesajGoster(BuildContext context, String mesaj) {
     var alert = AlertDialog(
-      title: Text("sınav sonucu"),
+      title: Text("İşlem sonucu"),
       content: Text(mesaj),
     );
     showDialog(context: context, builder: (BuildContext context) => alert);
@@ -72,15 +60,15 @@ class _MyappState extends State<Myapp> {
                     trailing: buildStatusIcon(students[index].grade),
                      onTap: () {
                       setState(() {
-                        seciliOgrenci = students[index].firstName + " " + students[index].lastName;
+                        selectedStudent = students[index];
                       });
-                      print(seciliOgrenci);
+                      print(selectedStudent.firstName);
 
                     }
 
                   );
                 })),
-        Text("Seçili öğrenci :" + seciliOgrenci),
+        Text("Seçili öğrenci :" + selectedStudent.firstName),
         Row(
           children: <Widget>[
             Flexible(
@@ -96,8 +84,7 @@ class _MyappState extends State<Myapp> {
                     ],
                   ),
                   onPressed: () {
-                    var mesaj = sinavHesapla(1);
-                    mesajGoster(context, mesaj);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentAdd()));
                   },
                 ),
 
@@ -115,7 +102,7 @@ class _MyappState extends State<Myapp> {
                   ],
                 ),
                 onPressed: () {
-                  var mesaj = sinavHesapla(1);
+                  var mesaj = "Güncellendi :";
                   mesajGoster(context, mesaj);
                 },
               ),
@@ -129,12 +116,16 @@ class _MyappState extends State<Myapp> {
                 child: Row(
                   children: <Widget>[
                     Icon(Icons.delete),
-
+                    SizedBox(width: 5.0,),
                     Text("Sil!!!"),
                   ],
                 ),
                 onPressed: () {
-                  var mesaj = sinavHesapla(35);
+                  setState(() {
+                    students.remove(selectedStudent);
+                  });
+
+                  var mesaj = "Silindi :" + selectedStudent.firstName + selectedStudent.lastName;
                   mesajGoster(context, mesaj);
                 },
               ),
