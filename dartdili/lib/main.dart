@@ -5,14 +5,19 @@ void main() {
   runApp(MaterialApp(home: Myapp()));
 }
 
-class Myapp extends StatelessWidget {
-  String mesaj_mrb = "merhaba..";
+class Myapp extends StatefulWidget {
+  @override
+  // State<Myapp> createState() return _MyappState();
+  State<Myapp> createState() => _MyappState();
+}
+
+class _MyappState extends State<Myapp> {
+  String mesaj_mrb = "Öğrenci Takip Sistemi";
+
+  String seciliOgrenci = "abc";
+
   // var students = new List <Student>(); --> hatali kullanim tipi
-
-  //var students = new List <Student>.empty();
-  // var students = <Student>[];
-  List<Student> students = [Student("kemal", "sakir", 25),Student("Kerem", "Varış",65),Student("Halil", "Duymaz", 45)];
-
+   List<Student> students = [Student("kemal", "sakir", 25),Student("Kerem", "Varış",65),Student("Halil", "Duymaz", 45)];
 
   var ogrenciler = [
     "kemal mufit",
@@ -63,20 +68,83 @@ class Myapp extends StatelessWidget {
                       backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2018/06/27/07/45/student-3500990_960_720.jpg"),
                     ),
                     title: Text(students[index].firstName + "" + students[index].lastName),
-                    subtitle: Text("Sınavdan aldiği not: " + students[index].grade.toString()),
+                    subtitle: Text("Sınavdan aldiği not: " + students[index].grade.toString() + " [" + students[index].getStatus + "]"),
                     trailing: buildStatusIcon(students[index].grade),
-                    // onTap: (){,
+                     onTap: () {
+                      setState(() {
+                        seciliOgrenci = students[index].firstName + " " + students[index].lastName;
+                      });
+                      print(seciliOgrenci);
+
+                    }
+
                   );
                 })),
-        Center(
-          child: RaisedButton(
-            child: Text("sonucu gor!!!"),
-            onPressed: () {
-              var mesaj = sinavHesapla(1);
-              mesajGoster(context, mesaj);
-            },
-          ),
-        ),
+        Text("Seçili öğrenci :" + seciliOgrenci),
+        Row(
+          children: <Widget>[
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 2,
+              child:    RaisedButton(
+                color: Colors.greenAccent,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.add),
+                      SizedBox(width: 3.0,),
+                      Text("Yeni Öğrenci!!!"),
+                    ],
+                  ),
+                  onPressed: () {
+                    var mesaj = sinavHesapla(1);
+                    mesajGoster(context, mesaj);
+                  },
+                ),
+
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 2,
+              child:    RaisedButton(
+                color: Colors.black26,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.update),
+                    SizedBox(width: 3.0,),
+                    Text("Güncelle!!!"),
+                  ],
+                ),
+                onPressed: () {
+                  var mesaj = sinavHesapla(1);
+                  mesajGoster(context, mesaj);
+                },
+              ),
+
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child:    RaisedButton(
+                color: Colors.amberAccent,
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.delete),
+
+                    Text("Sil!!!"),
+                  ],
+                ),
+                onPressed: () {
+                  var mesaj = sinavHesapla(35);
+                  mesajGoster(context, mesaj);
+                },
+              ),
+
+            )
+          ],
+        )
+
+
+      
       ],
     );
   }
