@@ -21,6 +21,12 @@ class Student{
 
   }
 
+  Student.withoutInfo(){
+
+  }
+
+
+
   String get getFirstName{
     return "OGR - " + this.firstName;
   }
